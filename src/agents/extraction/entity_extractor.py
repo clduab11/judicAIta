@@ -489,9 +489,7 @@ Entities:"""
 
                 # Find entity position in original text using re.finditer for duplicate handling
                 # Use context to disambiguate if multiple matches exist
-                matches = list(
-                    re.finditer(re.escape(entity_text.lower()), original_text.lower())
-                )
+                matches = list(re.finditer(re.escape(entity_text.lower()), original_text.lower()))
                 if not matches:
                     continue  # Entity not found in original text
 

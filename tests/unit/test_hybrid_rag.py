@@ -386,7 +386,7 @@ class TestQueryAnalytics:
         # Perform search
         try:
             rag.hybrid_search(sample_query, top_k=5)
-        except:
+        except Exception:
             pass
 
         # Analytics should be tracked
