@@ -83,7 +83,7 @@ class AgentConfig(BaseModel):
     enable_tracing: bool = Field(default=True, description="Enable reasoning traces")
     timeout_seconds: int = Field(default=300, ge=1, description="Execution timeout")
 
-    @validator("model_path")
+    @field_validator("model_path")
     def validate_model_path(cls, v: str) -> str:
         """Validate model path is Gemma 3n family."""
         if "gemma" not in v.lower():
