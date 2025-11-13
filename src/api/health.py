@@ -105,9 +105,7 @@ class HealthChecker:
         # Dependency checkers
         self.dependency_checkers: Dict[str, callable] = {}
 
-    def register_dependency(
-        self, name: str, checker: callable, dep_type: DependencyType
-    ) -> None:
+    def register_dependency(self, name: str, checker: callable, dep_type: DependencyType) -> None:
         """Register a dependency health checker.
 
         Args:
@@ -149,9 +147,7 @@ class HealthChecker:
         uptime = time.time() - self.start_time
 
         # Check critical dependencies in parallel
-        dependency_results = await self._check_dependencies(
-            critical_only=True
-        )
+        dependency_results = await self._check_dependencies(critical_only=True)
 
         # Determine overall status
         all_healthy = all(d.status == HealthStatus.HEALTHY for d in dependency_results)
@@ -208,9 +204,7 @@ class HealthChecker:
         uptime = time.time() - self.start_time
 
         # Check all dependencies in parallel
-        dependency_results = await self._check_dependencies(
-            critical_only=False
-        )
+        dependency_results = await self._check_dependencies(critical_only=False)
 
         # Determine overall status
         all_healthy = all(d.status == HealthStatus.HEALTHY for d in dependency_results)
@@ -232,9 +226,7 @@ class HealthChecker:
             details={"check_type": "full"},
         )
 
-    async def _check_dependencies(
-        self, critical_only: bool = False
-    ) -> List[DependencyHealth]:
+    async def _check_dependencies(self, critical_only: bool = False) -> List[DependencyHealth]:
         """Check all registered dependencies.
 
         Args:

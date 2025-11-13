@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 import logging
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 # ==================== ENUMS ====================
@@ -70,9 +70,7 @@ class AgentConfig(BaseModel):
     """
 
     name: str = Field(..., description="Agent unique identifier")
-    model_path: str = Field(
-        default="google/gemma-3-1b", description="HuggingFace model path"
-    )
+    model_path: str = Field(default="google/gemma-3-1b", description="HuggingFace model path")
     use_lora: bool = Field(default=False, description="Use LoRA adapters")
     lora_path: Optional[str] = Field(None, description="Path to LoRA weights")
     device: str = Field(default="cpu", description="Computation device")

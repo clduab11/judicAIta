@@ -27,6 +27,7 @@ from pydantic import BaseModel, Field, validator
 try:
     import chromadb
     from chromadb.config import Settings
+
     CHROMADB_AVAILABLE = True
 except ImportError:
     CHROMADB_AVAILABLE = False
@@ -50,9 +51,7 @@ class RAGConfig(BaseModel):
         max_context_length: Maximum context length for agents
     """
 
-    collection_name: str = Field(
-        default="legal_documents", description="Collection name"
-    )
+    collection_name: str = Field(default="legal_documents", description="Collection name")
     persist_directory: str = Field(
         default="./chroma_db", description="Persistent storage directory"
     )
@@ -60,20 +59,14 @@ class RAGConfig(BaseModel):
         default="all-MiniLM-L6-v2",
         description="Sentence-transformers model",
     )
-    chunk_size: int = Field(
-        default=500, ge=100, le=2000, description="Chunk size (chars)"
-    )
-    chunk_overlap: int = Field(
-        default=50, ge=0, le=500, description="Chunk overlap (chars)"
-    )
+    chunk_size: int = Field(default=500, ge=100, le=2000, description="Chunk size (chars)")
+    chunk_overlap: int = Field(default=50, ge=0, le=500, description="Chunk overlap (chars)")
     top_k: int = Field(default=10, ge=1, le=100, description="Results to retrieve")
     similarity_threshold: float = Field(
         default=0.5, ge=0.0, le=1.0, description="Similarity threshold"
     )
     enable_reranking: bool = Field(default=True, description="Enable reranking")
-    max_context_length: int = Field(
-        default=4000, ge=500, description="Max context length"
-    )
+    max_context_length: int = Field(default=4000, ge=500, description="Max context length")
 
     @validator("chunk_overlap")
     def validate_overlap(cls, v: int, values: Dict) -> int:
@@ -133,9 +126,7 @@ class LegalRAGSystem:
             RuntimeError: If ChromaDB not available
         """
         if not CHROMADB_AVAILABLE:
-            raise RuntimeError(
-                "ChromaDB not installed. Install with: pip install chromadb"
-            )
+            raise RuntimeError("ChromaDB not installed. Install with: pip install chromadb")
 
         self.config = config or RAGConfig()
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -167,9 +158,7 @@ class LegalRAGSystem:
                 metadata={"description": "Legal documents for RAG"},
             )
 
-            self.logger.info(
-                f"ChromaDB initialized (collection size: {self.collection.count()})"
-            )
+            self.logger.info(f"ChromaDB initialized (collection size: {self.collection.count()})")
 
         except Exception as e:
             self.logger.error(f"Failed to initialize ChromaDB: {str(e)}")
@@ -357,9 +346,7 @@ class LegalRAGSystem:
             self.logger.error(f"Search failed: {str(e)}")
             raise RuntimeError(f"Search failed: {str(e)}") from e
 
-    def get_context_for_query(
-        self, query: str, max_length: Optional[int] = None
-    ) -> str:
+    def get_context_for_query(self, query: str, max_length: Optional[int] = None) -> str:
         """Retrieve context for a query.
 
         Args:
@@ -393,9 +380,7 @@ class LegalRAGSystem:
 
         context = "\n\n".join(context_parts)
 
-        self.logger.info(
-            f"Retrieved context ({len(context)} chars) for query: '{query[:50]}...'"
-        )
+        self.logger.info(f"Retrieved context ({len(context)} chars) for query: '{query[:50]}...'")
 
         return context
 

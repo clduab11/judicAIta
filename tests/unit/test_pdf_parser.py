@@ -182,9 +182,7 @@ class TestPDFParsingAgentInitialization:
 
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
     def test_basic_initialization(
-        self,
-        agent_config: AgentConfig,
-        pdf_config: PDFParsingConfig
+        self, agent_config: AgentConfig, pdf_config: PDFParsingConfig
     ) -> None:
         """Test agent initializes correctly."""
         agent = PDFParsingAgent(agent_config, pdf_config)
@@ -216,11 +214,7 @@ class TestInputValidation:
     """Test input validation."""
 
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
-    def test_valid_input(
-        self,
-        agent_config: AgentConfig,
-        mock_pdf_file: Path
-    ) -> None:
+    def test_valid_input(self, agent_config: AgentConfig, mock_pdf_file: Path) -> None:
         """Test validation with valid input."""
         agent = PDFParsingAgent(agent_config)
         input_data = {"file_path": str(mock_pdf_file)}
@@ -244,11 +238,7 @@ class TestInputValidation:
         assert agent.validate_input(input_data) is False
 
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
-    def test_non_pdf_file(
-        self,
-        agent_config: AgentConfig,
-        tmp_path: Path
-    ) -> None:
+    def test_non_pdf_file(self, agent_config: AgentConfig, tmp_path: Path) -> None:
         """Test validation fails for non-PDF file."""
         txt_file = tmp_path / "document.txt"
         txt_file.write_text("Not a PDF")
@@ -308,10 +298,7 @@ class TestProcessing:
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
     @patch("src.agents.ingestion.pdf_parser.pdfplumber")
     def test_successful_processing(
-        self,
-        mock_pdfplumber,
-        agent_config: AgentConfig,
-        mock_pdf_file: Path
+        self, mock_pdfplumber, agent_config: AgentConfig, mock_pdf_file: Path
     ) -> None:
         """Test successful PDF processing."""
         # Mock pdfplumber
@@ -344,19 +331,14 @@ class TestProcessing:
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
     @patch("src.agents.ingestion.pdf_parser.pdfplumber")
     def test_processing_with_tables(
-        self,
-        mock_pdfplumber,
-        agent_config: AgentConfig,
-        mock_pdf_file: Path
+        self, mock_pdfplumber, agent_config: AgentConfig, mock_pdf_file: Path
     ) -> None:
         """Test processing PDF with tables."""
         # Mock pdfplumber with table
         mock_pdf = MagicMock()
         mock_page = MagicMock()
         mock_page.extract_text.return_value = "Contract with table"
-        mock_page.extract_tables.return_value = [
-            [["Header1", "Header2"], ["Data1", "Data2"]]
-        ]
+        mock_page.extract_tables.return_value = [[["Header1", "Header2"], ["Data1", "Data2"]]]
         mock_pdf.pages = [mock_page]
         mock_pdfplumber.open.return_value.__enter__.return_value = mock_pdf
 
@@ -387,10 +369,7 @@ class TestEdgeCases:
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
     @patch("src.agents.ingestion.pdf_parser.pdfplumber")
     def test_empty_pdf(
-        self,
-        mock_pdfplumber,
-        agent_config: AgentConfig,
-        mock_pdf_file: Path
+        self, mock_pdfplumber, agent_config: AgentConfig, mock_pdf_file: Path
     ) -> None:
         """Test processing empty PDF."""
         # Mock empty PDF
@@ -423,10 +402,7 @@ class TestEdgeCases:
         agent = PDFParsingAgent(agent_config, pdf_config)
 
         # Create mock pages
-        pages = [
-            PDFPage(page_number=i, text=f"Page {i}")
-            for i in range(1, 6)
-        ]
+        pages = [PDFPage(page_number=i, text=f"Page {i}") for i in range(1, 6)]
 
         # Filter by page range
         if agent.pdf_config.page_range:
@@ -448,10 +424,7 @@ class TestPDFParsingWorkflow:
     @patch("src.agents.ingestion.pdf_parser.PDFPLUMBER_AVAILABLE", True)
     @patch("src.agents.ingestion.pdf_parser.pdfplumber")
     def test_complete_parsing_workflow(
-        self,
-        mock_pdfplumber,
-        agent_config: AgentConfig,
-        mock_pdf_file: Path
+        self, mock_pdfplumber, agent_config: AgentConfig, mock_pdf_file: Path
     ) -> None:
         """Test complete PDF parsing workflow."""
         # Mock multi-page PDF

@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import torch
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from transformers import (
     AutoConfig,
     AutoModelForCausalLM,
@@ -88,14 +88,16 @@ class ModelConfig(BaseModel):
     cache_dir: Optional[str] = Field(None, description="Cache directory")
     trust_remote_code: bool = Field(default=True, description="Trust remote code")
 
-    @validator("model_name")
+    @field_validator("model_name")
+    @classmethod
     def validate_gemma_model(cls, v: str) -> str:
         """Validate model is from Gemma family."""
         if "gemma" not in v.lower():
             raise ValueError(f"Model must be from Gemma family, got: {v}")
         return v
 
-    @validator("torch_dtype")
+    @field_validator("torch_dtype")
+    @classmethod
     def validate_dtype(cls, v: str) -> str:
         """Validate dtype is supported."""
         valid_dtypes = ["float32", "float16", "bfloat16"]

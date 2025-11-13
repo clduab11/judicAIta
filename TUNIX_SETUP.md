@@ -1,6 +1,6 @@
 # 🎯 Tunix Fine-Tuning Guide: Gemma 3 1B on Kaggle TPU
 
-**Complete guide for fine-tuning Gemma 3 1B on legal corpora using Kaggle TPU V3-8**
+## Complete guide for fine-tuning Gemma 3 1B on legal corpora using Kaggle TPU V3-8
 
 ---
 
@@ -207,7 +207,7 @@ print(f"Processed dataset size: {len(cuad_processed)}")
 ### 3. Create Train/Val Splits
 
 ```python
-from datasets import DatasetDict
+from datasets import DatasetDict, concatenate_datasets
 
 # Combine datasets
 legal_corpus = concatenate_datasets([cuad_processed, casehold_processed, lexglue_processed])
@@ -648,6 +648,8 @@ def evaluate_citation_parsing(model, tokenizer, test_data):
 ### 2. Generate Benchmark Report
 
 ```python
+from datetime import datetime
+
 def generate_benchmark_report(model_name, results):
     """
     Generate comprehensive benchmark report.

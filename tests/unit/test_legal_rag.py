@@ -110,9 +110,7 @@ class TestRAGInitialization:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_successful_initialization(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_successful_initialization(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test RAG system initializes successfully."""
         # Mock ChromaDB client
         mock_client = MagicMock()
@@ -127,9 +125,7 @@ class TestRAGInitialization:
         assert rag.collection is not None
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", False)
-    def test_initialization_without_chromadb(
-        self, rag_config: RAGConfig
-    ) -> None:
+    def test_initialization_without_chromadb(self, rag_config: RAGConfig) -> None:
         """Test initialization fails without ChromaDB."""
         with pytest.raises(RuntimeError, match="ChromaDB not installed"):
             LegalRAGSystem(rag_config)
@@ -164,9 +160,7 @@ class TestDocumentChunking:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_chunk_with_overlap(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_chunk_with_overlap(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test chunking creates overlap between chunks."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -186,9 +180,7 @@ class TestDocumentChunking:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_split_into_sentences(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_split_into_sentences(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test sentence splitting."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -240,9 +232,7 @@ class TestDocumentAddition:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_add_empty_document(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_add_empty_document(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test adding empty document fails."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -265,9 +255,7 @@ class TestSearch:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_search_query(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_search_query(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test searching for documents."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -291,9 +279,7 @@ class TestSearch:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_search_with_empty_query(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_search_with_empty_query(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test search fails with empty query."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -309,9 +295,7 @@ class TestSearch:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_search_with_metadata_filter(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_search_with_metadata_filter(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test search with metadata filtering."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -327,9 +311,7 @@ class TestSearch:
         mock_chromadb.Client.return_value = mock_client
 
         rag = LegalRAGSystem(rag_config)
-        results = rag.search(
-            "termination", metadata_filter={"document_type": "contract"}
-        )
+        results = rag.search("termination", metadata_filter={"document_type": "contract"})
 
         assert len(results) > 0
         # Verify query was called with filter
@@ -344,9 +326,7 @@ class TestContextRetrieval:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_get_context_for_query(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_get_context_for_query(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test retrieving context for query."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -376,9 +356,7 @@ class TestContextRetrieval:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_context_respects_max_length(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_context_respects_max_length(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test context respects maximum length."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -408,9 +386,7 @@ class TestCollectionManagement:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_delete_document(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_delete_document(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test deleting document from collection."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -433,9 +409,7 @@ class TestCollectionManagement:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_clear_collection(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_clear_collection(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test clearing collection."""
         # Mock ChromaDB
         mock_client = MagicMock()
@@ -454,9 +428,7 @@ class TestCollectionManagement:
 
     @patch("src.models.rag.legal_rag.CHROMADB_AVAILABLE", True)
     @patch("src.models.rag.legal_rag.chromadb")
-    def test_get_collection_stats(
-        self, mock_chromadb, rag_config: RAGConfig
-    ) -> None:
+    def test_get_collection_stats(self, mock_chromadb, rag_config: RAGConfig) -> None:
         """Test getting collection statistics."""
         # Mock ChromaDB
         mock_client = MagicMock()

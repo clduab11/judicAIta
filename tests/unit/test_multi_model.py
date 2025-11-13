@@ -121,9 +121,7 @@ class TestEnsembleConfig:
         assert ensemble_config.enable_failover is True
         assert ensemble_config.max_retries == 3
 
-    def test_requires_at_least_one_enabled_model(
-        self, model_configs: list
-    ) -> None:
+    def test_requires_at_least_one_enabled_model(self, model_configs: list) -> None:
         """Test validation requires at least one enabled model."""
         # Disable all models
         for model in model_configs:
@@ -148,29 +146,19 @@ class TestEnsembleConfig:
 class TestMultiModelInitialization:
     """Test ensemble initialization."""
 
-    def test_successful_initialization(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_successful_initialization(self, ensemble_config: EnsembleConfig) -> None:
         """Test ensemble initializes successfully."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
         assert ensemble.config == ensemble_config
         assert len(ensemble.circuit_breakers) == 3
-        assert all(
-            cb.state == CircuitState.CLOSED
-            for cb in ensemble.circuit_breakers.values()
-        )
+        assert all(cb.state == CircuitState.CLOSED for cb in ensemble.circuit_breakers.values())
 
-    def test_circuit_breakers_created(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_circuit_breakers_created(self, ensemble_config: EnsembleConfig) -> None:
         """Test circuit breakers created for each model."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
-        expected_keys = [
-            f"{m.provider.value}:{m.model_name}"
-            for m in ensemble_config.models
-        ]
+        expected_keys = [f"{m.provider.value}:{m.model_name}" for m in ensemble_config.models]
 
         assert set(ensemble.circuit_breakers.keys()) == set(expected_keys)
 
@@ -181,42 +169,30 @@ class TestMultiModelInitialization:
 class TestModelSelection:
     """Test model selection logic."""
 
-    def test_select_models_by_priority(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_select_models_by_priority(self, ensemble_config: EnsembleConfig) -> None:
         """Test models selected by priority."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
-        selected = ensemble._select_models(
-            TaskComplexity.MEDIUM, require_consensus=False
-        )
+        selected = ensemble._select_models(TaskComplexity.MEDIUM, require_consensus=False)
 
         assert len(selected) > 0
         # Should be sorted by priority
         assert selected[0].priority <= selected[-1].priority
 
-    def test_select_cheaper_models_for_simple_tasks(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_select_cheaper_models_for_simple_tasks(self, ensemble_config: EnsembleConfig) -> None:
         """Test cost optimization for simple tasks."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
-        selected = ensemble._select_models(
-            TaskComplexity.SIMPLE, require_consensus=False
-        )
+        selected = ensemble._select_models(TaskComplexity.SIMPLE, require_consensus=False)
 
         # Gemma (free) should be first
         assert selected[0].provider == ModelProvider.GEMMA_3
 
-    def test_select_multiple_models_for_consensus(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_select_multiple_models_for_consensus(self, ensemble_config: EnsembleConfig) -> None:
         """Test selecting multiple models for consensus."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
-        selected = ensemble._select_models(
-            TaskComplexity.CRITICAL, require_consensus=True
-        )
+        selected = ensemble._select_models(TaskComplexity.CRITICAL, require_consensus=True)
 
         assert len(selected) >= 2
 
@@ -228,9 +204,7 @@ class TestModelSelection:
         config = EnsembleConfig(models=model_configs)
         ensemble = MultiModelEnsemble(config)
 
-        selected = ensemble._select_models(
-            TaskComplexity.MEDIUM, require_consensus=False
-        )
+        selected = ensemble._select_models(TaskComplexity.MEDIUM, require_consensus=False)
 
         # Claude should not be in selection
         assert all(m.provider != ModelProvider.CLAUDE for m in selected)
@@ -242,9 +216,7 @@ class TestModelSelection:
 class TestCircuitBreaker:
     """Test circuit breaker functionality."""
 
-    def test_circuit_opens_after_failures(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_circuit_opens_after_failures(self, ensemble_config: EnsembleConfig) -> None:
         """Test circuit opens after threshold failures."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -259,15 +231,13 @@ class TestCircuitBreaker:
             for _ in range(ensemble_config.circuit_breaker_threshold + 1):
                 try:
                     ensemble._generate_with_retry("test", model)
-                except:
+                except Exception:
                     pass
 
         # Circuit should be open
         assert ensemble.circuit_breakers[circuit_key].state == CircuitState.OPEN
 
-    def test_circuit_half_open_after_timeout(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_circuit_half_open_after_timeout(self, ensemble_config: EnsembleConfig) -> None:
         """Test circuit transitions to half-open after timeout."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -280,17 +250,13 @@ class TestCircuitBreaker:
         circuit.last_failure_time = None  # Force timeout
 
         # Try to select models
-        selected = ensemble._select_models(
-            TaskComplexity.MEDIUM, require_consensus=False
-        )
+        selected = ensemble._select_models(TaskComplexity.MEDIUM, require_consensus=False)
 
         # Should attempt half-open
         # (selection logic checks timeout and sets HALF_OPEN)
         assert len(selected) > 0
 
-    def test_circuit_closes_on_success(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_circuit_closes_on_success(self, ensemble_config: EnsembleConfig) -> None:
         """Test circuit closes on successful request."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -333,9 +299,7 @@ class TestRetryLogic:
         assert response.success
         assert mock_api.call_count == 3
 
-    def test_max_retries_exceeded(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_max_retries_exceeded(self, ensemble_config: EnsembleConfig) -> None:
         """Test behavior when max retries exceeded."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -357,26 +321,20 @@ class TestRetryLogic:
 class TestGeneration:
     """Test ensemble generation."""
 
-    def test_successful_generation(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_successful_generation(self, ensemble_config: EnsembleConfig) -> None:
         """Test successful text generation."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
         with patch.object(ensemble, "_call_model_api") as mock_api:
             mock_api.return_value = ("Generated text", 100)
 
-            response = ensemble.generate(
-                "Test prompt", complexity=TaskComplexity.MEDIUM
-            )
+            response = ensemble.generate("Test prompt", complexity=TaskComplexity.MEDIUM)
 
         assert isinstance(response, EnsembleResponse)
         assert response.final_text != ""
         assert response.primary_response.success
 
-    def test_failover_on_primary_failure(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_failover_on_primary_failure(self, ensemble_config: EnsembleConfig) -> None:
         """Test automatic failover when primary model fails."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -388,16 +346,12 @@ class TestGeneration:
             ]
 
             with patch("time.sleep"):
-                response = ensemble.generate(
-                    "Test prompt", complexity=TaskComplexity.MEDIUM
-                )
+                response = ensemble.generate("Test prompt", complexity=TaskComplexity.MEDIUM)
 
         assert response.primary_response.success
         assert response.failover_count > 0
 
-    def test_consensus_for_critical_tasks(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_consensus_for_critical_tasks(self, ensemble_config: EnsembleConfig) -> None:
         """Test consensus mechanism for critical tasks."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -419,9 +373,7 @@ class TestGeneration:
 class TestResponseValidation:
     """Test response validation."""
 
-    def test_detect_hallucination_patterns(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_detect_hallucination_patterns(self, ensemble_config: EnsembleConfig) -> None:
         """Test hallucination pattern detection."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -432,9 +384,7 @@ class TestResponseValidation:
 
         assert invalid is False
 
-    def test_valid_response_passes(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_valid_response_passes(self, ensemble_config: EnsembleConfig) -> None:
         """Test valid responses pass validation."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -445,9 +395,7 @@ class TestResponseValidation:
 
         assert valid is True
 
-    def test_empty_response_fails(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_empty_response_fails(self, ensemble_config: EnsembleConfig) -> None:
         """Test empty responses fail validation."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -462,9 +410,7 @@ class TestResponseValidation:
 class TestMetrics:
     """Test performance metrics tracking."""
 
-    def test_metrics_updated_on_success(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_metrics_updated_on_success(self, ensemble_config: EnsembleConfig) -> None:
         """Test metrics updated on successful request."""
         ensemble = MultiModelEnsemble(ensemble_config)
 
@@ -520,9 +466,7 @@ class TestFactoryFunctions:
 class TestMultiModelIntegration:
     """Integration tests for multi-model ensemble."""
 
-    def test_end_to_end_generation(
-        self, ensemble_config: EnsembleConfig
-    ) -> None:
+    def test_end_to_end_generation(self, ensemble_config: EnsembleConfig) -> None:
         """Test complete generation flow."""
         ensemble = MultiModelEnsemble(ensemble_config)
 

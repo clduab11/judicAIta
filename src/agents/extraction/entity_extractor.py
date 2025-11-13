@@ -203,9 +203,7 @@ class EntityExtractionAgent(BaseAgent):
         >>> entities = result.output["entities"]
     """
 
-    def __init__(
-        self, config: AgentConfig, entity_config: Optional[EntityExtractionConfig] = None
-    ):
+    def __init__(self, config: AgentConfig, entity_config: Optional[EntityExtractionConfig] = None):
         """Initialize entity extraction agent.
 
         Args:
@@ -292,7 +290,10 @@ class EntityExtractionAgent(BaseAgent):
         self.add_trace_step(
             step="start_extraction",
             description=f"Starting entity extraction ({len(text)} chars)",
-            input_data={"text_length": len(text), "entity_types": len(self.entity_config.entity_types)},
+            input_data={
+                "text_length": len(text),
+                "entity_types": len(self.entity_config.entity_types),
+            },
         )
 
         # Extract entities using multiple strategies
@@ -330,9 +331,9 @@ class EntityExtractionAgent(BaseAgent):
             "entity_types": {et.value: 0 for et in self.entity_config.entity_types},
             "total_relationships": len(relationships),
             "resolved_entities": len(resolved_entities),
-            "avg_confidence": sum(e.confidence for e in entities) / len(entities)
-            if entities
-            else 0.0,
+            "avg_confidence": (
+                sum(e.confidence for e in entities) / len(entities) if entities else 0.0
+            ),
         }
 
         # Count entities by type
@@ -486,11 +487,18 @@ Entities:"""
                 confidence = float(confidence_str)
                 confidence = max(0.0, min(1.0, confidence))  # Clamp to [0, 1]
 
-                # Find entity position in original text
-                start_char = original_text.lower().find(entity_text.lower())
-                if start_char == -1:
+                # Find entity position in original text using re.finditer for duplicate handling
+                # Use context to disambiguate if multiple matches exist
+                matches = list(
+                    re.finditer(re.escape(entity_text.lower()), original_text.lower())
+                )
+                if not matches:
                     continue  # Entity not found in original text
 
+                # If multiple matches, try to use context for disambiguation
+                # For now, use the first match (can be improved with context analysis)
+                match = matches[0]
+                start_char = match.start()
                 end_char = start_char + len(entity_text)
 
                 entity = Entity(
@@ -510,9 +518,7 @@ Entities:"""
 
         return entities
 
-    def _extract_relationships(
-        self, text: str, entities: List[Entity]
-    ) -> List[EntityRelationship]:
+    def _extract_relationships(self, text: str, entities: List[Entity]) -> List[EntityRelationship]:
         """Extract relationships between entities.
 
         Args:
@@ -714,7 +720,9 @@ Entities:"""
                 re.compile(r"\bTitle\s+\d+,\s+Section\s+\d+", re.I),
             ],
             EntityType.DATE: [
-                re.compile(r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\b"),
+                re.compile(
+                    r"\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}\b"
+                ),
                 re.compile(r"\b\d{1,2}/\d{1,2}/\d{2,4}\b"),
             ],
             EntityType.MONETARY: [

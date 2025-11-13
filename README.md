@@ -105,7 +105,7 @@ Every output includes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/judicaita/judicAIta.git
+git clone https://github.com/clduab11/judicAIta.git
 cd judicAIta
 
 # Create virtual environment
@@ -608,7 +608,7 @@ See [LICENSE](LICENSE) for full text.
 
 ## 📞 Contact
 
-- **GitHub Issues**: [judicaita/judicAIta/issues](https://github.com/judicaita/judicAIta/issues)
+- **GitHub Issues**: [clduab11/judicAIta/issues](https://github.com/clduab11/judicAIta/issues)
 - **Kaggle Discussion**: [Google Tunix Hackathon Forum](https://www.kaggle.com/competitions/google-tunix-hackathon/discussion)
 - **Email**: judicaita@example.com (placeholder)
 - **Documentation**: [docs.judicaita.dev](https://docs.judicaita.dev) (coming soon)
@@ -627,10 +627,10 @@ If you find JudicAIta useful, please:
 
 ## 📊 Project Stats
 
-![GitHub stars](https://img.shields.io/github/stars/judicaita/judicAIta?style=social)
-![GitHub forks](https://img.shields.io/github/forks/judicaita/judicAIta?style=social)
-![GitHub issues](https://img.shields.io/github/issues/judicaita/judicAIta)
-![GitHub PRs](https://img.shields.io/github/issues-pr/judicaita/judicAIta)
+![GitHub stars](https://img.shields.io/github/stars/clduab11/judicAIta?style=social)
+![GitHub forks](https://img.shields.io/github/forks/clduab11/judicAIta?style=social)
+![GitHub issues](https://img.shields.io/github/issues/clduab11/judicAIta)
+![GitHub PRs](https://img.shields.io/github/issues-pr/clduab11/judicAIta)
 
 ---
 

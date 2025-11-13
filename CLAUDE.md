@@ -42,7 +42,7 @@ JudicAIta is an open-source agentic legal automation platform designed for lawye
 
 ## Repository Structure
 
-```
+```text
 judicaita/
 ├── .github/                    # GitHub Actions workflows
 │   └── workflows/
@@ -157,6 +157,7 @@ judicaita/
 #### 1. Hierarchical Orchestration
 Use a coordinator agent to manage specialized subagents:
 ```python
+from typing import TypedDict
 from langgraph.graph import StateGraph
 from src.agents.orchestration import CoordinatorAgent
 from src.agents.parsing import ContractParsingAgent
@@ -179,6 +180,8 @@ workflow.add_edge("parse", "extract")
 #### 2. Agent Delegation
 Each agent has a single responsibility:
 ```python
+from abc import ABC, abstractmethod
+
 class BaseAgent(ABC):
     """Base class for all legal agents."""
 
@@ -236,7 +239,7 @@ def test_validate_bluebook_citation():
   - `refactor/description` for refactoring
   - `docs/description` for documentation
 - **Commit Messages**: Conventional Commits format
-  ```
+  ```text
   feat(agents): add contract parsing agent with clause extraction
 
   - Implement ContractParsingAgent class
