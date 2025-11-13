@@ -151,7 +151,7 @@ class ClauseExtractionConfig(BaseModel):
     )
     include_reasoning: bool = Field(default=True, description="Include AI reasoning")
 
-    @validator("clause_types")
+    @field_validator("clause_types")
     def validate_clause_types(cls, v: List[ClauseType]) -> List[ClauseType]:
         """Ensure at least one clause type."""
         if not v:
