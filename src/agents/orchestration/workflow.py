@@ -110,19 +110,11 @@ class WorkflowConfig(BaseModel):
         None, description="Document type (auto-detect if None)"
     )
     enable_pdf_parsing: bool = Field(default=True, description="Enable PDF parsing")
-    enable_entity_extraction: bool = Field(
-        default=True, description="Enable entity extraction"
-    )
-    enable_clause_extraction: bool = Field(
-        default=True, description="Enable clause extraction"
-    )
-    parallel_execution: bool = Field(
-        default=False, description="Enable parallel execution"
-    )
+    enable_entity_extraction: bool = Field(default=True, description="Enable entity extraction")
+    enable_clause_extraction: bool = Field(default=True, description="Enable clause extraction")
+    parallel_execution: bool = Field(default=False, description="Enable parallel execution")
     max_retries: int = Field(default=2, ge=0, le=5, description="Max retries per agent")
-    timeout_seconds: int = Field(
-        default=300, ge=10, description="Workflow timeout (seconds)"
-    )
+    timeout_seconds: int = Field(default=300, ge=10, description="Workflow timeout (seconds)")
     checkpoint_enabled: bool = Field(default=False, description="Enable checkpointing")
 
 
@@ -225,7 +217,9 @@ class LegalDocumentWorkflow:
         workflow.add_node("finalize", self._finalize_node)
 
         # Define edges
-        workflow.set_entry_point("pdf_parsing" if self.config.enable_pdf_parsing else "entity_extraction")
+        workflow.set_entry_point(
+            "pdf_parsing" if self.config.enable_pdf_parsing else "entity_extraction"
+        )
 
         if self.config.enable_pdf_parsing:
             workflow.add_edge("pdf_parsing", "entity_extraction")
@@ -317,9 +311,7 @@ class LegalDocumentWorkflow:
                 elapsed = (datetime.now() - start_time).total_seconds()
                 state["metrics"]["entity_extraction_time"] = elapsed
                 state["metrics"]["entities_extracted"] = len(state["entities"])
-                state["metrics"]["relationships_found"] = len(
-                    state["entity_relationships"]
-                )
+                state["metrics"]["relationships_found"] = len(state["entity_relationships"])
 
                 # Add trace
                 state["trace"].extend(result.trace)
@@ -355,11 +347,7 @@ class LegalDocumentWorkflow:
             # Extract party names from entities
             parties = []
             if state["entities"]:
-                parties = [
-                    e["text"]
-                    for e in state["entities"]
-                    if e.get("entity_type") == "PARTY"
-                ]
+                parties = [e["text"] for e in state["entities"] if e.get("entity_type") == "PARTY"]
 
             # Execute
             result = agent({"text": state["document_text"], "parties": parties})
@@ -368,9 +356,7 @@ class LegalDocumentWorkflow:
             if result.status == AgentStatus.COMPLETED:
                 state["clauses"] = result.output.get("clauses", [])
                 state["high_risk_clauses"] = result.output.get("high_risk_clauses", [])
-                state["obligations_by_party"] = result.output.get(
-                    "obligations_by_party", {}
-                )
+                state["obligations_by_party"] = result.output.get("obligations_by_party", {})
 
                 # Add metrics
                 elapsed = (datetime.now() - start_time).total_seconds()
@@ -411,9 +397,7 @@ class LegalDocumentWorkflow:
         # Set final status
         if state["errors"]:
             state["status"] = "completed_with_errors"
-            self.logger.warning(
-                f"Workflow completed with {len(state['errors'])} error(s)"
-            )
+            self.logger.warning(f"Workflow completed with {len(state['errors'])} error(s)")
         else:
             state["status"] = "completed"
             self.logger.info("Workflow completed successfully")

@@ -143,12 +143,8 @@ class ClauseExtractionConfig(BaseModel):
     use_gemma: bool = Field(default=True, description="Use Gemma 3 for analysis")
     assess_risk: bool = Field(default=True, description="Perform risk assessment")
     extract_obligations: bool = Field(default=True, description="Extract obligations")
-    min_clause_length: int = Field(
-        default=50, ge=10, description="Minimum clause length"
-    )
-    max_risk_score: float = Field(
-        default=0.8, ge=0.0, le=1.0, description="Max acceptable risk"
-    )
+    min_clause_length: int = Field(default=50, ge=10, description="Minimum clause length")
+    max_risk_score: float = Field(default=0.8, ge=0.0, le=1.0, description="Max acceptable risk")
     include_reasoning: bool = Field(default=True, description="Include AI reasoning")
 
     @field_validator("clause_types")
@@ -242,9 +238,7 @@ class ClauseExtractionAgent(BaseAgent):
             return False
 
         if len(input_data["text"].strip()) < self.clause_config.min_clause_length:
-            self.logger.error(
-                f"Text too short (min: {self.clause_config.min_clause_length} chars)"
-            )
+            self.logger.error(f"Text too short (min: {self.clause_config.min_clause_length} chars)")
             return False
 
         return True
@@ -296,11 +290,7 @@ class ClauseExtractionAgent(BaseAgent):
         )
 
         # Identify high-risk clauses
-        high_risk_clauses = [
-            c
-            for c in clauses
-            if c.risk_score > self.clause_config.max_risk_score
-        ]
+        high_risk_clauses = [c for c in clauses if c.risk_score > self.clause_config.max_risk_score]
 
         # Group obligations by party
         obligations_by_party = self._group_obligations_by_party(clauses)
@@ -311,9 +301,7 @@ class ClauseExtractionAgent(BaseAgent):
             "clause_types": {ct.value: 0 for ct in self.clause_config.clause_types},
             "high_risk_count": len(high_risk_clauses),
             "total_obligations": sum(len(c.obligations) for c in clauses),
-            "avg_risk_score": sum(c.risk_score for c in clauses) / len(clauses)
-            if clauses
-            else 0.0,
+            "avg_risk_score": sum(c.risk_score for c in clauses) / len(clauses) if clauses else 0.0,
         }
 
         # Count clauses by type
@@ -341,7 +329,9 @@ class ClauseExtractionAgent(BaseAgent):
         section_pattern = r"\n\d+\.(?:\d+\.)*\s+"
         if re.search(section_pattern, text):
             clauses = re.split(section_pattern, text)
-            clauses = [c.strip() for c in clauses if len(c.strip()) >= self.clause_config.min_clause_length]
+            clauses = [
+                c.strip() for c in clauses if len(c.strip()) >= self.clause_config.min_clause_length
+            ]
             if clauses:
                 return clauses
 
@@ -349,19 +339,21 @@ class ClauseExtractionAgent(BaseAgent):
         header_pattern = r"\n[A-Z][A-Z\s]{3,}:?\n"
         if re.search(header_pattern, text):
             clauses = re.split(header_pattern, text)
-            clauses = [c.strip() for c in clauses if len(c.strip()) >= self.clause_config.min_clause_length]
+            clauses = [
+                c.strip() for c in clauses if len(c.strip()) >= self.clause_config.min_clause_length
+            ]
             if clauses:
                 return clauses
 
         # Strategy 3: Split by double newlines (paragraphs)
         clauses = text.split("\n\n")
-        clauses = [c.strip() for c in clauses if len(c.strip()) >= self.clause_config.min_clause_length]
+        clauses = [
+            c.strip() for c in clauses if len(c.strip()) >= self.clause_config.min_clause_length
+        ]
 
         return clauses
 
-    def _analyze_clause(
-        self, clause_text: str, known_parties: List[str]
-    ) -> Optional[Clause]:
+    def _analyze_clause(self, clause_text: str, known_parties: List[str]) -> Optional[Clause]:
         """Analyze a single clause.
 
         Args:
@@ -534,9 +526,7 @@ Classification:"""
 
         return risk_score, reasoning
 
-    def _extract_obligations(
-        self, clause_text: str, known_parties: List[str]
-    ) -> List[Obligation]:
+    def _extract_obligations(self, clause_text: str, known_parties: List[str]) -> List[Obligation]:
         """Extract obligations from clause.
 
         Args:
@@ -587,9 +577,7 @@ Classification:"""
             return match.group(1)
         return None
 
-    def _extract_key_terms(
-        self, clause_text: str, clause_type: ClauseType
-    ) -> List[str]:
+    def _extract_key_terms(self, clause_text: str, clause_type: ClauseType) -> List[str]:
         """Extract key terms from clause.
 
         Args:
@@ -628,9 +616,7 @@ Classification:"""
         pattern = r"(?:Section|Clause|Article)\s+(\d+(?:\.\d+)*)"
         return re.findall(pattern, clause_text, re.I)
 
-    def _group_obligations_by_party(
-        self, clauses: List[Clause]
-    ) -> Dict[str, List[Dict[str, str]]]:
+    def _group_obligations_by_party(self, clauses: List[Clause]) -> Dict[str, List[Dict[str, str]]]:
         """Group obligations by responsible party.
 
         Args:

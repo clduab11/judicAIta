@@ -236,9 +236,7 @@ class TestClauseExtractionAgentInitialization:
 class TestInputValidation:
     """Test input validation."""
 
-    def test_valid_input(
-        self, agent_config: AgentConfig, sample_contract: str
-    ) -> None:
+    def test_valid_input(self, agent_config: AgentConfig, sample_contract: str) -> None:
         """Test validation with valid input."""
         agent = ClauseExtractionAgent(agent_config)
         input_data = {"text": sample_contract}
@@ -421,9 +419,7 @@ class TestRiskAssessment:
         assert risk_score >= 0.6  # Base risk for liability
         assert "liability" in reasoning.lower()
 
-    def test_assess_risk_with_high_risk_keywords(
-        self, agent_config: AgentConfig
-    ) -> None:
+    def test_assess_risk_with_high_risk_keywords(self, agent_config: AgentConfig) -> None:
         """Test risk assessment increases with high-risk keywords."""
         agent = ClauseExtractionAgent(agent_config)
         clause_text = "The Company has unlimited liability without limitation."
@@ -438,7 +434,9 @@ class TestRiskAssessment:
         """Test risk score is clamped to [0, 1]."""
         agent = ClauseExtractionAgent(agent_config)
         # Create clause with many high-risk keywords
-        clause_text = "unlimited perpetual irrevocable sole discretion without limitation all damages"
+        clause_text = (
+            "unlimited perpetual irrevocable sole discretion without limitation all damages"
+        )
 
         risk_score, _ = agent._assess_risk(clause_text, ClauseType.INDEMNITY)
 
@@ -498,9 +496,7 @@ class TestObligationExtraction:
         The Company will deliver results.
         """
 
-        obligations = agent._extract_obligations(
-            clause_text, ["Client", "Company"]
-        )
+        obligations = agent._extract_obligations(clause_text, ["Client", "Company"])
 
         assert len(obligations) >= 3
 

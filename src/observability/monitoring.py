@@ -314,9 +314,7 @@ class MetricsCollector:
         self.counters[metric_key] += value
         self.metric_timestamps[metric_key] = datetime.now()
 
-    def set_gauge(
-        self, name: str, value: float, labels: Optional[Dict[str, str]] = None
-    ) -> None:
+    def set_gauge(self, name: str, value: float, labels: Optional[Dict[str, str]] = None) -> None:
         """Set gauge metric.
 
         Args:
@@ -512,9 +510,7 @@ class AnomalyDetector:
 
         return False
 
-    def get_recent_anomalies(
-        self, minutes: int = 60
-    ) -> List[Alert]:
+    def get_recent_anomalies(self, minutes: int = 60) -> List[Alert]:
         """Get recent anomalies.
 
         Args:

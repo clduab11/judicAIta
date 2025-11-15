@@ -33,7 +33,7 @@ JudicAIta employs a **hierarchical multi-agent architecture** where specialized 
 
 ### System Layers
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    User Interface Layer                      │
 │  (React Frontend, CLI, API)                                  │
@@ -114,6 +114,8 @@ class BaseAgent(ABC):
 
     def add_trace(self, step: str, reasoning: str, output: Any):
         """Add step to reasoning trace."""
+        from datetime import datetime
+        
         self.trace.append({
             "step": step,
             "reasoning": reasoning,

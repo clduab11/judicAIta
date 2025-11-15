@@ -242,8 +242,7 @@ class MultiModelEnsemble:
 
         # Circuit breakers per model
         self.circuit_breakers: Dict[str, CircuitBreaker] = {
-            f"{m.provider.value}:{m.model_name}": CircuitBreaker()
-            for m in config.models
+            f"{m.provider.value}:{m.model_name}": CircuitBreaker() for m in config.models
         }
 
         # Performance metrics
@@ -341,10 +340,7 @@ class MultiModelEnsemble:
             total_latency_ms=total_latency,
             total_cost_usd=total_cost,
             confidence=confidence,
-            models_used=[
-                f"{r.provider.value}"
-                for r in [primary_response] + consensus_responses
-            ],
+            models_used=[f"{r.provider.value}" for r in [primary_response] + consensus_responses],
             failover_count=failover_count,
             validation_passed=validation_passed,
         )
@@ -407,9 +403,7 @@ class MultiModelEnsemble:
         else:
             return available_models
 
-    def _generate_with_retry(
-        self, prompt: str, model: ModelConfig
-    ) -> ModelResponse:
+    def _generate_with_retry(self, prompt: str, model: ModelConfig) -> ModelResponse:
         """Generate response with retry logic.
 
         Args:
@@ -461,9 +455,7 @@ class MultiModelEnsemble:
                 # Open circuit if threshold exceeded
                 if circuit.failure_count >= self.config.circuit_breaker_threshold:
                     circuit.state = CircuitState.OPEN
-                    self.logger.error(
-                        f"Circuit breaker OPEN for {model.provider.value}"
-                    )
+                    self.logger.error(f"Circuit breaker OPEN for {model.provider.value}")
 
                 # Update metrics
                 self._update_metrics(circuit_key, 0, 0, success=False)
@@ -513,9 +505,7 @@ class MultiModelEnsemble:
         else:
             raise ValueError(f"Unknown provider: {model.provider}")
 
-    def _get_consensus(
-        self, prompt: str, models: List[ModelConfig]
-    ) -> List[ModelResponse]:
+    def _get_consensus(self, prompt: str, models: List[ModelConfig]) -> List[ModelResponse]:
         """Get consensus from multiple models.
 
         Args:
@@ -533,9 +523,7 @@ class MultiModelEnsemble:
 
         return responses
 
-    def _aggregate_responses(
-        self, primary: ModelResponse, consensus: List[ModelResponse]
-    ) -> str:
+    def _aggregate_responses(self, primary: ModelResponse, consensus: List[ModelResponse]) -> str:
         """Aggregate multiple responses.
 
         Args:

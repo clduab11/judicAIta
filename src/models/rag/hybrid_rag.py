@@ -79,12 +79,8 @@ class HybridRAGConfig(BaseModel):
     chunking_strategy: ChunkingStrategy = Field(
         default=ChunkingStrategy.SECTION_BASED, description="Chunking strategy"
     )
-    enable_query_expansion: bool = Field(
-        default=True, description="Enable query expansion"
-    )
-    expansion_terms: int = Field(
-        default=3, ge=0, le=10, description="Number of expansion terms"
-    )
+    enable_query_expansion: bool = Field(default=True, description="Enable query expansion")
+    expansion_terms: int = Field(default=3, ge=0, le=10, description="Number of expansion terms")
     bm25_weight: float = Field(
         default=0.3, ge=0.0, le=1.0, description="BM25 weight in hybrid search"
     )
@@ -92,9 +88,7 @@ class HybridRAGConfig(BaseModel):
         default=0.7, ge=0.0, le=1.0, description="Vector weight in hybrid search"
     )
     enable_reranking: bool = Field(default=True, description="Enable reranking")
-    rerank_top_k: int = Field(
-        default=20, ge=5, le=100, description="Results to rerank"
-    )
+    rerank_top_k: int = Field(default=20, ge=5, le=100, description="Results to rerank")
     confidence_threshold: float = Field(
         default=0.3, ge=0.0, le=1.0, description="Minimum confidence"
     )
@@ -424,8 +418,7 @@ class HybridRAGSystem:
 
             # Combine scores
             hybrid_score = (
-                self.config.vector_weight * r.vector_score
-                + self.config.bm25_weight * bm25_score
+                self.config.vector_weight * r.vector_score + self.config.bm25_weight * bm25_score
             )
 
             r.bm25_score = bm25_score
@@ -457,9 +450,7 @@ class HybridRAGSystem:
             List of reranked search results
         """
         # Get hybrid results
-        hybrid_results = self._hybrid_search_impl(
-            query, self.config.rerank_top_k, metadata_filter
-        )
+        hybrid_results = self._hybrid_search_impl(query, self.config.rerank_top_k, metadata_filter)
 
         # Semantic reranking (simplified - in production use cross-encoder)
         # Boost results with exact phrase matches
@@ -541,9 +532,7 @@ class HybridRAGSystem:
 
         return results
 
-    def _generate_relevance_explanation(
-        self, result: HybridSearchResult, query: str
-    ) -> str:
+    def _generate_relevance_explanation(self, result: HybridSearchResult, query: str) -> str:
         """Generate human-readable relevance explanation.
 
         Args:

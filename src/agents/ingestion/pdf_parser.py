@@ -26,12 +26,14 @@ from src.agents.base import AgentConfig, BaseAgent
 # Optional imports with graceful degradation
 try:
     import pdfplumber
+
     PDFPLUMBER_AVAILABLE = True
 except ImportError:
     PDFPLUMBER_AVAILABLE = False
 
 try:
     from pypdf import PdfReader
+
     PYPDF_AVAILABLE = True
 except ImportError:
     PYPDF_AVAILABLE = False
@@ -130,11 +132,7 @@ class PDFParsingAgent(BaseAgent):
         >>> print(result.output["text"][:100])
     """
 
-    def __init__(
-        self,
-        config: AgentConfig,
-        pdf_config: Optional[PDFParsingConfig] = None
-    ):
+    def __init__(self, config: AgentConfig, pdf_config: Optional[PDFParsingConfig] = None):
         """Initialize PDF parsing agent.
 
         Args:
@@ -292,7 +290,7 @@ class PDFParsingAgent(BaseAgent):
                     if hasattr(page, "mediabox"):
                         metadata.page_size = (
                             float(page.mediabox.width),
-                            float(page.mediabox.height)
+                            float(page.mediabox.height),
                         )
 
         except Exception as e:
@@ -367,9 +365,7 @@ class PDFParsingAgent(BaseAgent):
                 if len(text.strip()) >= self.pdf_config.min_text_length:
                     pages.append(pdf_page)
                 else:
-                    self.logger.debug(
-                        f"Skipping page {page_num} (text length: {len(text)})"
-                    )
+                    self.logger.debug(f"Skipping page {page_num} (text length: {len(text)})")
 
         return pages
 

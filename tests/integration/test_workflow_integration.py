@@ -95,18 +95,14 @@ def workflow_config() -> WorkflowConfig:
 class TestAgentIntegration:
     """Test integration between individual agents."""
 
-    def test_entity_to_clause_integration(
-        self, sample_contract_text: str
-    ) -> None:
+    def test_entity_to_clause_integration(self, sample_contract_text: str) -> None:
         """Test data flow from entity extraction to clause extraction."""
         # Extract entities first
         entity_config = EntityExtractionConfig(
             entity_types=["PARTY", "DATE", "MONETARY"],
             use_gemma=False,
         )
-        entity_agent = EntityExtractionAgent(
-            AgentConfig(name="entity_extractor"), entity_config
-        )
+        entity_agent = EntityExtractionAgent(AgentConfig(name="entity_extractor"), entity_config)
 
         entity_result = entity_agent({"text": sample_contract_text})
 
@@ -121,13 +117,9 @@ class TestAgentIntegration:
             clause_types=["termination", "indemnity", "liability", "payment"],
             use_gemma=False,
         )
-        clause_agent = ClauseExtractionAgent(
-            AgentConfig(name="clause_extractor"), clause_config
-        )
+        clause_agent = ClauseExtractionAgent(AgentConfig(name="clause_extractor"), clause_config)
 
-        clause_result = clause_agent(
-            {"text": sample_contract_text, "parties": parties}
-        )
+        clause_result = clause_agent({"text": sample_contract_text, "parties": parties})
 
         assert clause_result.status.value == "completed"
         clauses = clause_result.output["clauses"]
@@ -209,9 +201,7 @@ class TestWorkflowIntegration:
         assert isinstance(workflow, LegalDocumentWorkflow)
         assert workflow.config.document_type == DocumentType.CONTRACT
 
-    def test_workflow_state_initialization(
-        self, sample_contract_text: str
-    ) -> None:
+    def test_workflow_state_initialization(self, sample_contract_text: str) -> None:
         """Test workflow state initialization."""
         config = WorkflowConfig(
             enable_pdf_parsing=False,
@@ -350,9 +340,7 @@ class TestWorkflowIntegration:
         assert "total_time" in updated_state["metrics"]
         assert updated_state["metrics"]["total_time"] > 0
 
-    def test_complete_workflow_execution(
-        self, sample_contract_text: str, tmp_path: Path
-    ) -> None:
+    def test_complete_workflow_execution(self, sample_contract_text: str, tmp_path: Path) -> None:
         """Test complete workflow execution end-to-end."""
         # Create temp file
         test_file = tmp_path / "contract.txt"
@@ -445,9 +433,7 @@ class TestWorkflowErrorHandling:
         # Should have errors due to empty text
         assert len(state["errors"]) > 0
 
-    def test_workflow_with_partial_failures(
-        self, sample_contract_text: str
-    ) -> None:
+    def test_workflow_with_partial_failures(self, sample_contract_text: str) -> None:
         """Test workflow continues with partial failures."""
         config = WorkflowConfig(
             enable_pdf_parsing=False,
@@ -491,9 +477,7 @@ class TestWorkflowErrorHandling:
 class TestWorkflowPerformance:
     """Performance benchmarks for workflow."""
 
-    def test_workflow_latency(
-        self, sample_contract_text: str
-    ) -> None:
+    def test_workflow_latency(self, sample_contract_text: str) -> None:
         """Test workflow completes within performance target."""
         import time
 

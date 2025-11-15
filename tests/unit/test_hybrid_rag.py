@@ -139,9 +139,7 @@ class TestQueryExpansion:
     """Test query expansion with legal synonyms."""
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem")
-    def test_expand_query(
-        self, mock_rag_class, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_expand_query(self, mock_rag_class, hybrid_config: HybridRAGConfig) -> None:
         """Test query expansion adds synonyms."""
         mock_rag_class.return_value = MagicMock()
 
@@ -254,9 +252,7 @@ class TestConfidenceScoring:
     """Test confidence scoring and calibration."""
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem")
-    def test_confidence_scores_added(
-        self, mock_rag_class, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_confidence_scores_added(self, mock_rag_class, hybrid_config: HybridRAGConfig) -> None:
         """Test confidence scores are added to results."""
         mock_rag_class.return_value = MagicMock()
 
@@ -292,9 +288,7 @@ class TestConfidenceScoring:
         assert results[0].confidence >= results[1].confidence
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem")
-    def test_confidence_within_bounds(
-        self, mock_rag_class, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_confidence_within_bounds(self, mock_rag_class, hybrid_config: HybridRAGConfig) -> None:
         """Test confidence scores are in valid range."""
         mock_rag_class.return_value = MagicMock()
 
@@ -392,16 +386,14 @@ class TestQueryAnalytics:
         # Perform search
         try:
             rag.hybrid_search(sample_query, top_k=5)
-        except:
+        except Exception:
             pass
 
         # Analytics should be tracked
         assert len(rag.query_history) > 0
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem")
-    def test_analytics_summary(
-        self, mock_rag_class, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_analytics_summary(self, mock_rag_class, hybrid_config: HybridRAGConfig) -> None:
         """Test analytics summary generation."""
         mock_rag = MagicMock()
         mock_rag.search.return_value = []
@@ -436,9 +428,7 @@ class TestDynamicChunking:
     """Test dynamic chunking strategies."""
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem")
-    def test_chunk_by_sections(
-        self, mock_rag_class, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_chunk_by_sections(self, mock_rag_class, hybrid_config: HybridRAGConfig) -> None:
         """Test section-based chunking."""
         mock_rag_class.return_value = MagicMock()
 
@@ -457,9 +447,7 @@ class TestDynamicChunking:
         assert len(chunks) > 0
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem")
-    def test_chunk_by_clauses(
-        self, mock_rag_class, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_chunk_by_clauses(self, mock_rag_class, hybrid_config: HybridRAGConfig) -> None:
         """Test clause-based chunking."""
         mock_rag_class.return_value = MagicMock()
 
@@ -485,9 +473,7 @@ class TestFactoryFunctions:
     """Test factory functions."""
 
     @patch("src.models.rag.hybrid_rag.LegalRAGSystem.__init__")
-    def test_create_production_hybrid_rag(
-        self, mock_init, tmp_path: Path
-    ) -> None:
+    def test_create_production_hybrid_rag(self, mock_init, tmp_path: Path) -> None:
         """Test production RAG factory."""
         mock_init.return_value = None
 
@@ -508,9 +494,7 @@ class TestHybridRAGIntegration:
     """Integration tests for hybrid RAG."""
 
     @patch("src.models.rag.hybrid_rag.CHROMADB_AVAILABLE", False)
-    def test_graceful_degradation_without_chromadb(
-        self, hybrid_config: HybridRAGConfig
-    ) -> None:
+    def test_graceful_degradation_without_chromadb(self, hybrid_config: HybridRAGConfig) -> None:
         """Test system handles missing ChromaDB gracefully."""
         # Should not raise, just warn
         rag = HybridRAGSystem(hybrid_config)

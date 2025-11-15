@@ -520,7 +520,9 @@ class TestEntityResolution:
         agent = EntityExtractionAgent(agent_config, entity_config)
 
         entities = [
-            Entity(text="John Doe", type=EntityType.PARTY, start_char=0, end_char=8, confidence=0.9),
+            Entity(
+                text="John Doe", type=EntityType.PARTY, start_char=0, end_char=8, confidence=0.9
+            ),
         ]
 
         resolved = agent._resolve_entities(entities, "doc1")
@@ -538,7 +540,9 @@ class TestEntityResolution:
         agent = EntityExtractionAgent(agent_config, entity_config)
 
         entities = [
-            Entity(text="John Doe", type=EntityType.PARTY, start_char=0, end_char=8, confidence=0.9),
+            Entity(
+                text="John Doe", type=EntityType.PARTY, start_char=0, end_char=8, confidence=0.9
+            ),
             Entity(
                 text="John Doe", type=EntityType.PARTY, start_char=50, end_char=58, confidence=0.85
             ),
