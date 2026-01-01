@@ -1,0 +1,47 @@
+# JudicAIta Kaggle-Compatible Requirements
+# 
+# This file contains minimal dependencies optimized for Kaggle notebook environments.
+# Use this instead of the full requirements.txt when running in Kaggle.
+#
+# Installation:
+#   pip install -r requirements-kaggle.txt
+#
+# Note: Many packages are pre-installed in Kaggle. We only list essential ones.
+
+# Core dependencies (compatible with Kaggle pre-installed versions)
+pydantic>=2.5.0,<3.0.0
+pydantic-settings>=2.1.0,<3.0.0
+python-dotenv>=1.0.0,<2.0.0
+loguru>=0.7.0,<1.0.0
+
+# Document processing
+pdfplumber>=0.10.0,<1.0.0
+python-docx>=1.1.0,<2.0.0
+pypdf>=3.17.0,<5.0.0
+
+# CLI and display
+typer>=0.9.0,<1.0.0
+rich>=13.7.0,<15.0.0
+
+# Async support for notebooks
+nest-asyncio>=1.6.0,<2.0.0
+aiofiles>=23.2.0,<25.0.0
+
+# Progress bars (should be pre-installed in Kaggle)
+tqdm>=4.65.0
+
+# API support
+httpx>=0.25.0,<1.0.0
+
+# Note: The following are typically pre-installed in Kaggle:
+# - torch
+# - transformers
+# - numpy
+# - pandas
+# - jax (for TPU)
+# 
+# For TPU training, install from GitHub:
+# pip install git+https://github.com/google/tunix
+# pip install git+https://github.com/google/qwix
+# pip install git+https://github.com/jax-ml/jax
+# pip install git+https://github.com/google/flax
