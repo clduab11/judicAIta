@@ -389,6 +389,178 @@ See the `examples/` directory for complete examples:
 - `examples/citation_mapping.py`: Citation mapping examples
 - `examples/notebooks/`: Jupyter notebooks with interactive examples
 
+---
+
+## Notebook Utilities
+
+For use in Jupyter notebooks and Kaggle environments, JudicAIta provides synchronous wrappers:
+
+### Quick Start (Notebook)
+
+```python
+from judicaita.notebook_utils import NotebookHelper
+
+helper = NotebookHelper(show_progress=True)
+
+# Complete workflow
+result = helper.upload_and_analyze(
+    file_path="document.pdf",
+    query="What are the key legal issues?",
+    summary_level="medium",
+    reading_level="high_school"
+)
+
+print(result["summary"].summary)
+print(f"Found {len(result['citations'])} citations")
+```
+
+### Sync Wrappers
+
+```python
+from judicaita.notebook_utils import (
+    process_document_sync,
+    generate_trace_sync,
+    extract_citations_sync,
+    generate_summary_sync,
+)
+
+# Process document synchronously
+content = process_document_sync("brief.pdf")
+
+# Extract citations synchronously
+citations = extract_citations_sync(content.text)
+
+# Generate summary synchronously
+summary = generate_summary_sync(
+    text=content.text,
+    reading_level="high_school"
+)
+```
+
+### Batch Processing
+
+```python
+helper = NotebookHelper(show_progress=True)
+
+files = ["doc1.pdf", "doc2.pdf", "doc3.pdf"]
+results = helper.batch_process_documents(files)
+
+for r in results:
+    if "error" not in r:
+        print(f"Processed: {len(r['document'].text)} chars")
+```
+
+### Export Results
+
+```python
+result = helper.upload_and_analyze("document.pdf")
+paths = helper.export_results(result, "./output", format="markdown")
+print(f"Summary saved to: {paths['summary']}")
+```
+
+---
+
+## REST API
+
+JudicAIta provides a FastAPI-based REST API for programmatic access.
+
+### Starting the Server
+
+```bash
+# Using CLI
+judicaita serve --host 0.0.0.0 --port 8000
+
+# Or directly with uvicorn
+uvicorn judicaita.api:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### API Documentation
+
+Once running, access:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **OpenAPI Schema**: http://localhost:8000/openapi.json
+
+### Core Endpoints
+
+#### Health Check
+
+```bash
+# Basic health
+GET /health
+
+# Readiness (checks dependencies)
+GET /ready
+```
+
+#### Documents
+
+```bash
+# Upload document
+POST /api/v1/documents/upload
+Content-Type: multipart/form-data
+
+# Get processed document
+GET /api/v1/documents/{document_id}
+
+# Analyze document
+POST /api/v1/documents/{document_id}/analyze
+```
+
+#### Analysis
+
+```bash
+# Generate reasoning trace
+POST /api/v1/analysis/reasoning-trace
+{
+  "query": "What are the legal issues?",
+  "context": "...",
+  "citations": ["347 U.S. 483"]
+}
+
+# Stream reasoning trace (SSE)
+GET /api/v1/analysis/reasoning-trace/stream?query=...&context=...
+
+# Extract citations
+POST /api/v1/analysis/citations
+{
+  "text": "Brown v. Board of Education, 347 U.S. 483 (1954)",
+  "validate": true
+}
+
+# Generate summary
+POST /api/v1/analysis/summary
+{
+  "text": "...",
+  "summary_level": "medium",
+  "reading_level": "high_school"
+}
+```
+
+### Python Client Example
+
+```python
+import httpx
+
+async with httpx.AsyncClient(base_url="http://localhost:8000") as client:
+    # Upload document
+    with open("brief.pdf", "rb") as f:
+        response = await client.post(
+            "/api/v1/documents/upload",
+            files={"file": f}
+        )
+    doc = response.json()
+    
+    # Analyze
+    response = await client.post(
+        f"/api/v1/documents/{doc['document_id']}/analyze",
+        json={"extract_citations": True, "generate_summary": True}
+    )
+    analysis = response.json()
+```
+
+---
+
 ## Support
 
 - Documentation: https://github.com/clduab11/judicAIta/docs

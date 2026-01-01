@@ -121,6 +121,8 @@
   - Validation guide created (docs/COLAB_VALIDATION_GUIDE.md)
   - Notebook has comprehensive inline comments
   - All code examples are current
+  - KAGGLE_SETUP.md with step-by-step guide
+  - ROADMAP.md with post-hackathon features
 
 - [ ] **Submission Package**
   - Kaggle upload directory created (`./kaggle_upload/`)
@@ -131,6 +133,24 @@
     - [ ] tokenizer_config.json
     - [ ] special_tokens_map.json
     - [ ] README.md (submission)
+
+- [ ] **Public Notebook Requirement**
+  - Notebook uploaded to Kaggle
+  - Notebook set to public visibility
+  - Notebook runs end-to-end without errors
+  - Notebook metadata complete (title, description, tags)
+
+- [ ] **Video Demo** (if required)
+  - Video is ≤3 minutes long
+  - Video shows key features in action
+  - Video uploaded to YouTube/Drive
+  - Video link accessible
+
+- [ ] **Technical Writeup** (if required)
+  - Writeup follows competition format
+  - All required sections complete
+  - Proper citations and references
+  - Uploaded to required location
 
 - [ ] **JSON Validation**
   - All JSON files are valid
@@ -154,6 +174,12 @@
   - No hardcoded paths or credentials
   - Error handling present for critical operations
   - Code follows project style guidelines
+
+- [ ] **Pre-Submission Verification**
+  - Documentation links all work
+  - Demo notebooks tested in Kaggle
+  - Video accessible and plays correctly
+  - Writeup properly formatted
 
 ---
 
@@ -334,14 +360,22 @@ except Exception as e:
   - Checkpoints backed up
   - Submission package backed up
 
+- [ ] **Post-Competition Tasks**
+  - Monitor leaderboard for results
+  - Prepare for winner announcement (if applicable)
+  - Plan Phase 1 kickoff (API + Web UI)
+  - Review and incorporate competition feedback
+
 ---
 
 ## Resources
 
+- **Kaggle Setup Guide**: [KAGGLE_SETUP.md](../KAGGLE_SETUP.md)
 - **Validation Guide**: [docs/COLAB_VALIDATION_GUIDE.md](../docs/COLAB_VALIDATION_GUIDE.md)
 - **Training Notebook**: [examples/notebooks/train_tunix_reasoning.ipynb](../examples/notebooks/train_tunix_reasoning.ipynb)
 - **Notebook README**: [examples/notebooks/README.md](../examples/notebooks/README.md)
 - **Main README**: [README.md](../README.md)
+- **Roadmap**: [ROADMAP.md](../ROADMAP.md)
 - **GitHub Issues**: https://github.com/clduab11/judicAIta/issues
 
 ---

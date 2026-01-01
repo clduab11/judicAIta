@@ -267,3 +267,95 @@ Easy to add new document formats, citation types, or analysis methods.
 6. **Advanced Analytics**: Usage patterns and insights
 7. **Mobile Apps**: iOS and Android clients
 8. **Plugin System**: Community extensions
+
+---
+
+## Detailed Diagrams
+
+For detailed architecture diagrams using Mermaid, see:
+
+- [System Architecture](diagrams/system_architecture.md) - Component relationships
+- [Data Flow](diagrams/data_flow.md) - Request/response flows
+- [Training Pipeline](diagrams/training_pipeline.md) - GRPO training architecture
+
+---
+
+## GRPO Training Integration
+
+JudicAIta uses Group Relative Policy Optimization (GRPO) for fine-tuning:
+
+### Training Pipeline
+
+1. **Data Preparation**
+   - LegalBench dataset for task-specific examples
+   - Pile of Law for domain knowledge
+   - Synthetic Chain-of-Thought generation
+
+2. **Model Configuration**
+   - Base: Gemma 3-1B-IT
+   - LoRA adapters for parameter efficiency
+   - TPU-optimized with JAX/Flax
+
+3. **Reward Function**
+   - XML format validation (40%)
+   - Reasoning length (30%)
+   - Citation quality (20%)
+   - Output coherence (10%)
+
+4. **Validation Phases**
+   - Phase 1: Environment validation
+   - Phase 2: Training setup verification
+   - Phase 3: Output quality checks
+   - Phase 4: Submission preparation
+
+### Async Architecture
+
+JudicAIta uses async/await patterns throughout:
+
+```python
+# Event loop management
+async def process_document(path):
+    content = await doc_service.process_document(path)
+    citations = await citation_service.extract_and_map_citations(content.text)
+    summary = await summary_gen.generate_summary(content.text)
+    return content, citations, summary
+
+# Concurrent processing
+async def process_batch(paths):
+    tasks = [process_document(p) for p in paths]
+    return await asyncio.gather(*tasks)
+```
+
+### Caching Strategy
+
+- **In-memory**: Citation cache in CitationMappingService
+- **LRU Cache**: Settings via `@lru_cache` decorator
+- **Redis**: Planned for distributed caching
+
+---
+
+## Troubleshooting
+
+### Common Architectural Questions
+
+**Q: How do I add a new document processor?**
+
+```python
+from judicaita.document_input.base import DocumentProcessor, DocumentContent
+
+class MyProcessor(DocumentProcessor):
+    async def process(self, file_path: Path) -> DocumentContent:
+        # Implementation
+        pass
+
+# Register
+service.register_processor("myformat", MyProcessor())
+```
+
+**Q: How do I extend reasoning steps?**
+
+Modify `ReasoningTraceGenerator._perform_inference()` or add new step methods following the existing pattern.
+
+**Q: How do I add custom citation types?**
+
+Extend `CitationParser` with new regex patterns in `CITATION_PATTERNS`.

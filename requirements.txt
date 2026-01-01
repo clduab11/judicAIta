@@ -41,6 +41,7 @@ fastapi>=0.105.0
 uvicorn[standard]>=0.25.0
 httpx>=0.25.0
 aiofiles>=23.2.0
+python-multipart>=0.0.6
 
 # Templating & Validation
 jinja2>=3.1.0
