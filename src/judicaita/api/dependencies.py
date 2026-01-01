@@ -47,7 +47,10 @@ async def require_api_key(
     Require a valid API key for endpoint access.
 
     Raises HTTPException if no API key is provided.
-    In production, this would also validate the key.
+
+    Note: This is a placeholder implementation. In production, this should
+    validate the API key against the database. The current implementation
+    accepts any non-empty key for development purposes only.
 
     Args:
         x_api_key: API key from X-API-Key header
@@ -56,7 +59,7 @@ async def require_api_key(
         The validated API key
 
     Raises:
-        HTTPException: If no API key is provided
+        HTTPException: If no API key is provided or invalid
     """
     if not x_api_key:
         raise HTTPException(
@@ -65,8 +68,24 @@ async def require_api_key(
             headers={"WWW-Authenticate": "ApiKey"},
         )
 
-    # TODO: Validate API key against database
-    # For now, accept any non-empty key
+    # TODO: Production implementation should:
+    # 1. Hash the provided key
+    # 2. Query the database for a matching key_hash
+    # 3. Check if the key is active and not expired
+    # 4. Update last_used_at timestamp
+    # 5. Return the associated user info
+    #
+    # For development/demo purposes, accept any non-empty key.
+    # This MUST be replaced before production deployment.
+    import warnings
+
+    warnings.warn(
+        "API key validation is using placeholder implementation. "
+        "Replace with database validation before production deployment.",
+        UserWarning,
+        stacklevel=2,
+    )
+
     return x_api_key
 
 

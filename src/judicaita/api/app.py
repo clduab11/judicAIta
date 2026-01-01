@@ -34,12 +34,26 @@ def create_app() -> FastAPI:
     Returns:
         FastAPI: Configured application instance
     """
-    # Create settings with debug=True if no API key, for development/testing
     import os
+    import warnings
 
+    # Handle missing GOOGLE_API_KEY for development/demo purposes only
+    # In production, this should fail if the key is not set
     if not os.environ.get("GOOGLE_API_KEY"):
-        os.environ["DEBUG"] = "true"
-        os.environ["GOOGLE_API_KEY"] = ""  # Empty but present
+        if os.environ.get("JUDICAITA_ENV", "development") == "production":
+            raise RuntimeError(
+                "GOOGLE_API_KEY must be set in production environment. "
+                "Set JUDICAITA_ENV=development for development mode."
+            )
+        else:
+            warnings.warn(
+                "GOOGLE_API_KEY not set. Running in development mode. "
+                "Set JUDICAITA_ENV=production for production deployment.",
+                UserWarning,
+                stacklevel=2,
+            )
+            os.environ["DEBUG"] = "true"
+            os.environ["GOOGLE_API_KEY"] = ""
 
     settings = get_settings()
 

@@ -211,20 +211,24 @@ async def get_citation(citation_id: str) -> CitationResponse:
     """
     Retrieve details about a specific citation.
 
-    Note: In the current implementation, citations are not persisted.
-    This endpoint is a placeholder for future database integration.
+    Note: Citations are currently not persisted to a database.
+    This endpoint returns 404 until database integration is implemented.
 
     Args:
         citation_id: Unique citation identifier
 
     Returns:
         Citation details
+
+    Raises:
+        HTTPException: 404 if citation not found
     """
-    # Placeholder - in production, this would query a database
+    # Citations are extracted on-demand and not currently persisted.
+    # When database integration is added, this will query the citations table.
     raise HTTPException(
-        status_code=501,
-        detail="Citation retrieval by ID not yet implemented. "
-        "Use /analysis/citations to extract citations from text.",
+        status_code=404,
+        detail=f"Citation with ID '{citation_id}' not found. "
+        "Use POST /analysis/citations to extract citations from text.",
     )
 
 

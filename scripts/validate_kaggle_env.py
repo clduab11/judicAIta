@@ -154,12 +154,12 @@ class KaggleEnvironmentValidator:
             if spec is None:
                 return False
 
-            # Try to get version
+            # Try to get version (for potential future use in detailed output)
             try:
                 mod = __import__(package_name.replace("-", "_"))
-                version = getattr(mod, "__version__", "unknown")
+                _ = getattr(mod, "__version__", "unknown")
             except Exception:
-                version = "installed"
+                pass  # Version info not critical for existence check
 
             return True
         except Exception:
@@ -182,7 +182,8 @@ class KaggleEnvironmentValidator:
         all_installed = True
         for package, min_ver in required:
             installed = self.check_package_installed(package)
-            version_info = f" (>={min_ver})" if min_ver else ""
+            # min_ver available for future version checking enhancement
+            _ = min_ver
             self.log_check(
                 f"Package: {package}",
                 installed,
@@ -214,13 +215,22 @@ class KaggleEnvironmentValidator:
                 "Available" if installed else "Not installed",
             )
 
-        # Check for Tunix
-        try:
-            from tunix.rl.grpo import GRPOLearner  # noqa: F401
-
-            self.log_check("Google Tunix", True, "Available")
-            results["tunix"] = True
-        except ImportError:
+        # Check for Tunix using importlib.util.find_spec for existence check
+        tunix_spec = importlib.util.find_spec("tunix")
+        if tunix_spec is not None:
+            # Verify the specific module we need exists
+            try:
+                grpo_spec = importlib.util.find_spec("tunix.rl.grpo")
+                if grpo_spec is not None:
+                    self.log_check("Google Tunix", True, "Available")
+                    results["tunix"] = True
+                else:
+                    self.log_check("Google Tunix", False, "Incomplete installation")
+                    results["tunix"] = False
+            except (ImportError, ModuleNotFoundError):
+                self.log_check("Google Tunix", False, "Incomplete installation")
+                results["tunix"] = False
+        else:
             self.log_check("Google Tunix", False, "Not installed")
             self.log_recommendation(
                 "Install Tunix: pip install git+https://github.com/google/tunix"
@@ -329,7 +339,7 @@ class KaggleEnvironmentValidator:
         try:
             from judicaita.notebook_utils import NotebookHelper
 
-            helper = NotebookHelper(show_progress=False)
+            _ = NotebookHelper(show_progress=False)
             self.log_check("NotebookHelper", True, "Instantiated successfully")
         except Exception as e:
             self.log_check("NotebookHelper", False, str(e))

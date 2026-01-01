@@ -20,8 +20,15 @@ from judicaita.document_input import DocumentInputService
 
 router = APIRouter()
 
-# In-memory storage for demo purposes
-# In production, this would use a database
+# WARNING: In-memory storage for demo/development purposes only.
+# This approach has limitations:
+# - Data is lost on server restart
+# - Does not scale horizontally (each instance has separate storage)
+# - May cause memory issues with large documents
+#
+# For production, replace with database persistence using the db module:
+#   from judicaita.db import get_async_session
+#   from judicaita.db.models import Document
 _documents: dict[str, dict[str, Any]] = {}
 
 
