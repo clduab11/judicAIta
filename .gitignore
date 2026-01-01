@@ -72,7 +72,7 @@ audit_logs/
 *.sqlite3
 
 # Model files and data
-models/
+/models/
 *.pt
 *.pth
 *.onnx
