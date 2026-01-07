@@ -1,28 +1,124 @@
 # Judicaita 🏛️⚖️
+### Google Tunix Kaggle Hackathon Submission
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-AGPL%203.0-green.svg)](LICENSE)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Hackathon](https://img.shields.io/badge/Google%20Tunix-Hackathon-orange)](https://www.kaggle.com/competitions/google-tunix-hackathon)
 
-**An Explainable Legal AI Assistant for Lawyers and Paralegals**
+**A submission to the [Google TuniX Hackathon on Kaggle](https://www.kaggle.com/competitions/google-tunix-hackathon) demonstrating GRPO (Group Relative Policy Optimization) training on a concrete legal reasoning use case.**
 
-Judicaita is an AI companion built with **Google Tunix** and **Gemma3-1B-IT** for the Kaggle hackathon. It generates explainable legal reasoning, stepwise traces, citation mapping, plain-English summaries, and compliance audit logs from case files, ensuring transparent and efficient legal workflows...fitting all this into a tiny form factor that can go anywhere!
+JudicAIta uses **Google Tunix** and **Gemma 3-1B-IT** to train an AI that "shows its work"—generating explainable legal reasoning with XML-tagged traces (`<reasoning>`/`<answer>`) that lawyers can audit. This project showcases how GRPO enables memory-efficient reinforcement learning on TPU, producing transparent, structured legal analysis rather than black-box answers.
 
 <img width="2560" height="1440" alt="VeniceAI_sNE72d5_@2x" src="https://github.com/user-attachments/assets/0eab368e-69b0-4b35-8715-7252a04d2301" />
 
-## 🏆 Kaggle Google TuniX Hackathon
+---
 
-This project is developed for the [Google TuniX Hackathon on Kaggle](https://www.kaggle.com/competitions/google-tunix-hackathon). JudicAIta demonstrates GRPO (Group Relative Policy Optimization) training for legal AI, producing explainable reasoning traces in structured XML format. The system fine-tunes Google Gemma models on legal reasoning tasks to generate transparent, auditable legal analysis.
+## 🏅 For Kaggle Reviewers
+
+> **Start here to evaluate this submission.** The following links take you directly to the key hackathon deliverables:
+
+| Deliverable | Description |
+|-------------|-------------|
+| 📓 **[Training Notebook](examples/notebooks/train_tunix_reasoning.ipynb)** | Primary Tunix GRPO training notebook with TPU execution |
+| ✅ **[Validation Guide](docs/COLAB_VALIDATION_GUIDE.md)** | 4-phase validation process for environment, training, inference, and submission |
+| 📝 **[Technical Writeup](docs/hackathon_writeup.md)** | Detailed explanation of approach, architecture, and results |
+| 📋 **[Submission Checklist](docs/HACKATHON_SUBMISSION_CHECKLIST.md)** | Complete checklist with verification status |
 
 **Submission Deadline**: January 12, 2026
 
-### Competition Submission
+---
 
-- **Primary Training Notebook**: [`examples/notebooks/train_tunix_reasoning.ipynb`](examples/notebooks/train_tunix_reasoning.ipynb)
-- **Validation Guide**: [`docs/COLAB_VALIDATION_GUIDE.md`](docs/COLAB_VALIDATION_GUIDE.md) - 4-phase validation process
-- **Submission Checklist**: [`docs/HACKATHON_SUBMISSION_CHECKLIST.md`](docs/HACKATHON_SUBMISSION_CHECKLIST.md)
-- **Submission Record**: [`docs/SUBMISSION_RECORD.md`](docs/SUBMISSION_RECORD.md)
-- **Technical Writeup**: [`docs/hackathon_writeup.md`](docs/hackathon_writeup.md)
+## 🎯 How This Meets Google Tunix Hackathon Objectives
+
+| Objective | Implementation | Details |
+|-----------|----------------|---------|
+| **Tunix/GRPO Training** | Model generates XML-tagged reasoning traces (`<reasoning>`/`<answer>`) that "show its work" | [Training Notebook](examples/notebooks/train_tunix_reasoning.ipynb) |
+| **Multi-Objective Reward** | Composite reward function (correctness 40%, reasoning 30%, citations 20%, clarity 10%) produces better, more interpretable rationales | [Reward Implementation](src/judicaita/training/rewards.py) |
+| **Reproducibility** | 4-phase validation guide ensures robust, reproducible training on Kaggle/Colab TPU | [Validation Guide](docs/COLAB_VALIDATION_GUIDE.md) |
+| **Practical Use Case** | Legal reasoning as concrete domain—lawyers need to audit the *path* to conclusions, not just the answers | [Technical Writeup](docs/hackathon_writeup.md) |
+
+---
+
+## 🏆 Primary Hackathon Deliverables
+
+### 1. Training Notebook
+**[`examples/notebooks/train_tunix_reasoning.ipynb`](examples/notebooks/train_tunix_reasoning.ipynb)**
+
+The primary deliverable—a complete Tunix GRPO training pipeline on TPU v2-8.
+
+**What reviewers should verify:**
+- GRPO configuration using Google Tunix framework
+- XML format enforcement in generation
+- Multi-objective reward function implementation
+- LoRA adapter training on Gemma 3-1B-IT
+
+### 2. Validation Guide
+**[`docs/COLAB_VALIDATION_GUIDE.md`](docs/COLAB_VALIDATION_GUIDE.md)**
+
+Comprehensive 4-phase validation covering environment, training, inference, and submission.
+
+**What reviewers should verify:**
+- Phase 1: Environment & dependency validation (8 TPU cores, correct packages)
+- Phase 2: Training pipeline verification (GRPO config, reward functions)
+- Phase 3: Inference & output quality (XML format, reasoning traces)
+- Phase 4: Submission preparation (package validation, checklist)
+
+### 3. Technical Writeup
+**[`docs/hackathon_writeup.md`](docs/hackathon_writeup.md)**
+
+Detailed explanation of the problem, approach, implementation, and results.
+
+**What reviewers should verify:**
+- Problem statement (why legal AI needs "show your work")
+- GRPO approach and multi-objective reward design
+- Technical implementation details
+- Results and evaluation metrics
+
+### 4. Submission Checklist
+**[`docs/HACKATHON_SUBMISSION_CHECKLIST.md`](docs/HACKATHON_SUBMISSION_CHECKLIST.md)** | **[`docs/SUBMISSION_RECORD.md`](docs/SUBMISSION_RECORD.md)**
+
+Complete checklist tracking all submission requirements and current status.
+
+**What reviewers should verify:**
+- All technical requirements met
+- Notebook execution validated
+- Model quality metrics achieved
+
+---
+
+## 🔄 Reproducibility on Kaggle/Colab
+
+Follow these steps to reproduce the training:
+
+1. **Open the notebook**: [`train_tunix_reasoning.ipynb`](examples/notebooks/train_tunix_reasoning.ipynb) in Google Colab
+2. **Select TPU v2-8**: Runtime → Change runtime type → TPU
+3. **Authenticate**: Log into Hugging Face and Kaggle when prompted
+4. **Run Step 1** (dependencies): Expect `jax_cuda12_plugin` warnings (harmless on TPU)
+5. **Restart runtime**: Required after dependency installation
+6. **Execute Phase 1 validation**: Verify 8 TPU cores detected, all imports successful
+7. **Run training**: Execute remaining cells through GRPO training
+8. **Verify XML format**: Check generated outputs contain `<reasoning>` and `<answer>` tags
+9. **Check metrics**: Review reward scores and training logs
+10. **Validate with checklist**: Complete Phase 4 validation before submission
+
+**Constraints:**
+- ⏱️ 9-hour maximum session duration
+- 📊 20-hour weekly TPU quota
+- 📦 Dependency versions: see [Important Setup Notes](#%EF%B8%8F-important-setup-notes)
+
+For detailed procedures and troubleshooting, see the **[Complete Validation Guide](docs/COLAB_VALIDATION_GUIDE.md)**.
+
+---
+
+## 🌟 Features
+
+### Training & Evaluation (Hackathon Focus)
+- **GRPO Training**: Train models using Group Relative Policy Optimization on TPU
+- **XML Reasoning Traces**: Structured `<reasoning>`/`<answer>` format for explainable AI
+- **Multi-objective Rewards**: Composite reward function with correctness, reasoning, citation, and clarity components
+- **LoRA Fine-tuning**: Parameter-efficient fine-tuning of Gemma models
+- **Model Evaluation**: Evaluate trained checkpoints on legal reasoning tasks
 
 ### Reward Function
 
@@ -35,9 +131,7 @@ JudicAIta uses a multi-objective reward function with the following weights:
 | Citation Accuracy | 20% | Proper citation format and relevance |
 | Clarity | 10% | Readability and accessibility |
 
-The reward function uses GRPO (Group Relative Policy Optimization) for memory-efficient training on TPU. See [`src/judicaita/training/rewards.py`](src/judicaita/training/rewards.py) and [`docs/hackathon_writeup.md`](docs/hackathon_writeup.md) for implementation details.
-
-## 🌟 Features
+The reward function uses GRPO for memory-efficient training on TPU. See [`src/judicaita/training/rewards.py`](src/judicaita/training/rewards.py) and [`docs/hackathon_writeup.md`](docs/hackathon_writeup.md) for implementation details.
 
 ### Document Processing
 - **PDF & Word Processing**: Extract text from legal documents in PDF and DOCX formats
@@ -48,12 +142,6 @@ The reward function uses GRPO (Group Relative Policy Optimization) for memory-ef
 - **Citation Validation**: Validate citation format and structure
 - **Query Analysis**: Analyze legal queries with context-aware responses
 
-### Training & Evaluation
-- **GRPO Training**: Train models using Group Relative Policy Optimization on TPU
-- **Multi-objective Rewards**: Composite reward function with correctness, reasoning, citation, and clarity components
-- **LoRA Fine-tuning**: Parameter-efficient fine-tuning of Gemma models
-- **Model Evaluation**: Evaluate trained checkpoints on legal reasoning tasks
-
 ### Infrastructure
 - **CLI Interface**: Seven commands: `process_document`, `analyze_query`, `audit_report`, `validate_citation`, `serve`, `train_grpo`, `evaluate_model`
 - **Docker Support**: Three-service architecture with PostgreSQL and Redis
@@ -61,12 +149,21 @@ The reward function uses GRPO (Group Relative Policy Optimization) for memory-ef
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### For Hackathon Evaluation (Recommended)
 
+The fastest way to evaluate this submission:
+
+1. Open [`train_tunix_reasoning.ipynb`](examples/notebooks/train_tunix_reasoning.ipynb) in Google Colab
+2. Set runtime to **TPU v2-8**: Runtime → Change runtime type → TPU
+3. Follow the [Reproducibility steps](#-reproducibility-on-kagglecolab) above
+
+### Local Development Installation
+
+**Prerequisites:**
 - Python 3.10 or higher
 - Google API key for Tunix and Gemma access
 
-### Installation
+**Installation:**
 
 1. Clone the repository:
 ```bash
@@ -93,7 +190,13 @@ cp .env.example .env
 # Edit .env and add your Google API key
 ```
 
-## 🐳 Docker Setup
+---
+
+## 🚀 Production Deployment & Advanced Usage
+
+*The following sections cover production deployment, CLI usage, and advanced configuration. For hackathon evaluation, see the [Primary Hackathon Deliverables](#-primary-hackathon-deliverables) above.*
+
+### 🐳 Docker Setup
 
 Judicaita provides a three-service Docker architecture for development:
 
@@ -103,7 +206,7 @@ Judicaita provides a three-service Docker architecture for development:
 | PostgreSQL 16 | `postgres:16-alpine` | Database storage |
 | Redis 7 | `redis:7-alpine` | Caching layer |
 
-### Docker Commands
+#### Docker Commands
 
 ```bash
 # Build Docker image
@@ -123,9 +226,9 @@ make docker-logs
 
 The Docker configuration includes volume mounts for `./data`, `./logs`, and `./uploads` directories for development.
 
-## 📖 Usage
+### 📖 Usage
 
-### Command Line Interface
+#### Command Line Interface
 
 Process a legal document:
 ```bash
@@ -142,7 +245,7 @@ Generate audit report:
 judicaita audit-report --days 30 --output report.md
 ```
 
-### Python API
+#### Python API
 
 ```python
 from judicaita.document_input import DocumentInputService
@@ -231,7 +334,7 @@ See `.env.example` for all configuration options.
 
 ### TPU Training Dependencies (Critical)
 
-> **🔴 ATTENTION KAGGLE HACKATHON PARTICIPANTS:** The training notebook was updated in **December 2025** with comprehensive validation cells for end-to-end submission readiness. If you encounter any issues, refer to the detailed validation guide.
+> **🔴 ATTENTION KAGGLE HACKATHON PARTICIPANTS:** The training notebook was updated in **December 2025** with comprehensive validation cells for end-to-end submission readiness. See the [Validation Guide](docs/COLAB_VALIDATION_GUIDE.md) for detailed procedures.
 
 | Package | Required Version | Notes |
 |---------|------------------|-------|
@@ -250,66 +353,9 @@ See `.env.example` for all configuration options.
 - `jax_cuda12_plugin` warnings are **normal** on Colab TPU and can be safely ignored
 - These appear because Colab has GPU packages pre-installed alongside TPU runtime
 
-### 📋 Complete Validation Guide (4 Phases)
+## 🔧 TPU Training Details
 
-**NEW:** Comprehensive validation guide covering all phases from environment setup to submission:
-
-**[📖 Complete Validation Guide](docs/COLAB_VALIDATION_GUIDE.md)** - Detailed validation procedures including:
-
-1. **Phase 1: Environment & Dependency Validation**
-   - ✅ TPU runtime configuration
-   - ✅ Package version verification
-   - ✅ Import validation (Tunix, JAX, Flax)
-   - ✅ HBM memory check
-   - ✅ LoRA adapter configuration
-
-2. **Phase 2: Training Pipeline Verification**
-   - ✅ Model download & initialization
-   - ✅ Dataset preparation validation
-   - ✅ GRPO configuration review
-   - ✅ Reward function testing
-   - ✅ Training setup validation
-
-3. **Phase 3: Inference & Output Quality**
-   - ✅ XML format validation
-   - ✅ Reasoning quality assessment
-   - ✅ Citation extraction testing
-   - ✅ Output quality metrics
-
-4. **Phase 4: Submission Preparation**
-   - ✅ Package structure validation
-   - ✅ JSON file validation
-   - ✅ Final submission checklist
-
-**Quick Start Validation:**
-
-Before running full training, execute the validation cells in the notebook:
-
-1. Run **Phase 1 validation cells** after Step 1 installation
-2. Verify all checks pass (8 TPU cores, imports successful)
-3. Proceed to **Phase 2** training after validation
-4. Use **Phase 3** cells to validate inference quality
-5. Complete **Phase 4** checklist before submission
-
-See the [Validation Guide](docs/COLAB_VALIDATION_GUIDE.md) for detailed procedures and troubleshooting.
-
-## 🔧 Training on Google Cloud TPU
-
-### Primary Hackathon Deliverable
-
-The training notebook is the **primary deliverable** for the Kaggle Google TuniX Hackathon submission.
-
-**Notebook:** [`examples/notebooks/train_tunix_reasoning.ipynb`](examples/notebooks/train_tunix_reasoning.ipynb)
-
-> 📢 **Updated December 2025:** This notebook now includes **comprehensive validation cells** covering all 4 phases:
-> - **Phase 1**: Environment & dependency validation (TPU, imports, packages)
-> - **Phase 2**: Training pipeline verification (setup, config, reward functions)
-> - **Phase 3**: Inference & output quality (XML format, reasoning, citations)
-> - **Phase 4**: Submission preparation (package validation, checklist)
-> 
-> **Total validation cells**: 11 new cells added for end-to-end validation
-> 
-> See [Complete Validation Guide](docs/COLAB_VALIDATION_GUIDE.md) for detailed procedures.
+> **See [Primary Hackathon Deliverables](#-primary-hackathon-deliverables) above for the main training notebook and submission materials.**
 
 This specialized training approach uses:
 - **Framework:** JAX/Flax with Google Tunix (different from main PyTorch codebase)
@@ -343,38 +389,6 @@ This specialized training approach uses:
 - Google Colab account with TPU access
 - Hugging Face account for model downloads
 - Kaggle account for submissions
-
-**Quick Start with Validation:**
-1. Open [`train_tunix_reasoning.ipynb`](examples/notebooks/train_tunix_reasoning.ipynb) in Colab
-2. Set runtime to TPU (Runtime → Change runtime type → TPU)
-3. Run **Step 1** (dependencies) - expect `jax_cuda12_plugin` warnings (harmless)
-4. **Restart runtime** when installation completes
-5. Run **Step 2** (TPU initialization)
-6. **Execute Phase 1 validation cells** - verify all checks pass:
-   - ✅ 8 TPU cores detected
-   - ✅ Tunix/Flax/JAX imports successful
-   - ✅ Package versions correct
-7. Continue with Steps 3-5 (model download, dataset prep, reward function)
-8. **Execute Phase 2 validation cells** - verify training setup
-9. Run training execution
-10. **Execute Phase 3 validation cells** - verify output quality
-11. Export adapters and run **Phase 4 validation** - prepare submission
-
-**Complete Validation Flow:**
-- **Phase 1** (pre-training): Environment and dependencies
-- **Phase 2** (pre-training): Training pipeline setup
-- **Phase 3** (post-training): Inference and output quality
-- **Phase 4** (pre-submission): Package validation and checklist
-
-**Quick Troubleshooting:**
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `ModuleNotFoundError: No module named 'tunix'` | Wrong install method | Use `git+https://github.com/google/tunix` |
-| JAX TPU initialization fails | Wrong JAX version | Use `git+https://github.com/jax-ml/jax` |
-| `jax_cuda12_plugin` warnings | Normal for Colab | Ignore - harmless for TPU |
-| Runtime not restarted | Skipped Step 4 | Runtime → Restart runtime after Step 1 |
-
-**Complete Troubleshooting:** See [Validation Guide](docs/COLAB_VALIDATION_GUIDE.md#troubleshooting-reference) for detailed solutions to all common issues.
 
 See [examples/notebooks/README.md](examples/notebooks/README.md) for more training options including PyTorch-based GRPO training.
 
