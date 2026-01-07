@@ -6,9 +6,9 @@
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Hackathon](https://img.shields.io/badge/Google%20Tunix-Hackathon-orange)](https://www.kaggle.com/competitions/google-tunix-hackathon)
 
-**A submission to the [Google TuniX Hackathon on Kaggle](https://www.kaggle.com/competitions/google-tunix-hackathon) demonstrating GRPO (Group Relative Policy Optimization) training on a concrete legal reasoning use case.**
+**A submission to the [Google Tunix Hackathon on Kaggle](https://www.kaggle.com/competitions/google-tunix-hackathon) demonstrating GRPO (Group Relative Policy Optimization) training on a concrete legal reasoning use case.**
 
-JudicAIta uses **Google Tunix** and **Gemma 3-1B-IT** to train an AI that "shows its work"—generating explainable legal reasoning with XML-tagged traces (`<reasoning>`/`<answer>`) that lawyers can audit. This project showcases how GRPO enables memory-efficient reinforcement learning on TPU, producing transparent, structured legal analysis rather than black-box answers.
+Judicaita uses **Google Tunix** and **Gemma 3-1B-IT** to train an AI that "shows its work"—generating explainable legal reasoning with XML-tagged traces (`<reasoning>`/`<answer>`) that lawyers can audit. This project showcases how GRPO enables memory-efficient reinforcement learning on TPU, producing transparent, structured legal analysis rather than black-box answers.
 
 <img width="2560" height="1440" alt="VeniceAI_sNE72d5_@2x" src="https://github.com/user-attachments/assets/0eab368e-69b0-4b35-8715-7252a04d2301" />
 
@@ -105,7 +105,7 @@ Follow these steps to reproduce the training:
 **Constraints:**
 - ⏱️ 9-hour maximum session duration
 - 📊 20-hour weekly TPU quota
-- 📦 Dependency versions: see [Important Setup Notes](#%EF%B8%8F-important-setup-notes)
+- 📦 Dependency versions: see [Important Setup Notes](#-important-setup-notes)
 
 For detailed procedures and troubleshooting, see the **[Complete Validation Guide](docs/COLAB_VALIDATION_GUIDE.md)**.
 
