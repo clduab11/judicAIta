@@ -543,7 +543,7 @@ This project is licensed under the GNU Affero General Public License v3.0 (AGPL-
 
 ## 🙏 Acknowledgments
 
-- Built with [Google Tunix](https://tunix.google.com) (0.1.x series) and [Gemma 3n](https://ai.google.dev/gemma)
+- Built with [Google Tunix](https://tunix.google.com) (0.1.x series) and [Gemma3-1B-1T](https://ai.google.dev/gemma)
 - Optimized for the **Kaggle Google Tunix Hackathon** requirements
 - TPU training tested on Google Colab TPU runtime (note: JAX 0.4+ requires TPU VMs not available on Colab)
 - Inspired by the legal tech community's commitment to access to justice
